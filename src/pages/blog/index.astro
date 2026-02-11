@@ -5,11 +5,12 @@ import ArticleGrid from '../../components/ArticleGrid.astro';
 import Pagination from '../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import { entriesToPosts, publishedFilter, getPagination } from '../../data/posts';
+import { withBase } from '../../utils/url';
 
 const PER_PAGE = 9;
 const entries = await getCollection('blog', publishedFilter);
 const allPosts = entriesToPosts(entries);
-const { postsForPage, prevUrl, nextUrl } = getPagination(allPosts, 1, '/blog', PER_PAGE);
+const { postsForPage, prevUrl, nextUrl } = getPagination(allPosts, 1, withBase('blog'), PER_PAGE);
 ---
 
 <Layout title="Blog | moment of beings" description="moment of beings — Blog 文章列表">

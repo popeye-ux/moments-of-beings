@@ -1,19 +1,20 @@
 ---
 import logo from '../assets/logo.png';
 import searchIcon from '../assets/search.png';
+import { withBase } from '../utils/url';
 
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/archive', label: 'Archive' },
-  { href: '/about', label: 'About' },
+  { href: withBase('/'), label: 'Home' },
+  { href: withBase('/blog'), label: 'Blog' },
+  { href: withBase('/archive'), label: 'Archive' },
+  { href: withBase('/about'), label: 'About' },
 ];
 const currentPath = Astro.url.pathname;
 ---
 
 <header class="header">
   <div class="header-left">
-    <a href="/" class="brand">
+    <a href={withBase('/')} class="brand">
       <img src={logo.src} alt="moment of beings" class="brand-logo" />
     </a>
   </div>
@@ -22,13 +23,13 @@ const currentPath = Astro.url.pathname;
       {navItems.map((item) => (
         <a
           href={item.href}
-          class:list={['nav-link', { 'nav-link--current': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }]}
+          class:list={['nav-link', { 'nav-link--current': currentPath === item.href || (item.href !== withBase('/') && currentPath.startsWith(item.href)) }]}
         >
           {item.label}
         </a>
       ))}
     </nav>
-    <a href="/search" class="search-btn" aria-label="搜尋" title="搜尋">
+    <a href={withBase('/search')} class="search-btn" aria-label="搜尋" title="搜尋">
       <img src={searchIcon.src} alt="" width="24" height="24" class="search-icon" />
     </a>
   </div>

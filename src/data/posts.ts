@@ -3,6 +3,7 @@
  * 列表來自 src/content/blog/*.md
  */
 import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../utils/url';
 
 export interface Post {
   slug: string;
@@ -33,7 +34,7 @@ function formatDate(d: Date): string {
 export function entryToPost(entry: CollectionEntry<'blog'>): Post {
   const { data } = entry;
   return {
-    slug: `/blog/${entry.slug}`,
+    slug: withBase(`blog/${entry.slug}`),
     title: data.title,
     excerpt: truncateExcerpt(data.description),
     date: formatDate(data.pubDate),
@@ -64,7 +65,7 @@ const DEFAULT_PER_PAGE = 9;
 export function getPagination(
   posts: Post[],
   currentPage: number,
-  basePath = '/blog',
+  basePath = withBase('blog'),
   perPage = DEFAULT_PER_PAGE
 ) {
   const totalPages = Math.max(1, Math.ceil(posts.length / perPage));

@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Theme from '../../layouts/Theme.astro';
 import { getCollection } from 'astro:content';
 import { entriesToPosts, publishedFilter } from '../../data/posts';
+import { withBase } from '../../utils/url';
 
 const entries = await getCollection('blog', publishedFilter);
 const allPosts = entriesToPosts(entries);
@@ -12,7 +13,7 @@ const searchablePosts = allPosts.map((p) => ({ slug: p.slug, title: p.title, exc
 <Layout title="搜尋 | moment of beings" description="moment of beings — 搜尋">
   <Theme>
     <section class="search-section" aria-label="搜尋">
-      <form class="search-form" action="/search" method="get" role="search">
+      <form class="search-form" action={withBase('/search')} method="get" role="search">
         <input
           type="search"
           name="q"

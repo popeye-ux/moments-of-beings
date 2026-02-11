@@ -5,6 +5,7 @@ import ArticleGrid from '../../../components/ArticleGrid.astro';
 import Pagination from '../../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import { entriesToPosts, publishedFilter, getPagination } from '../../../data/posts';
+import { withBase } from '../../../utils/url';
 
 export async function getStaticPaths() {
   const perPage = 9; // ← 直接在 function 內宣告，避免任何作用域怪問題
@@ -22,7 +23,7 @@ const { page } = Astro.params;
 const currentPage = Number(page) || 2;
 const entries = await getCollection('blog', publishedFilter);
 const allPosts = entriesToPosts(entries);
-const { postsForPage, prevUrl, nextUrl } = getPagination(allPosts, currentPage, '/blog', perPage);
+const { postsForPage, prevUrl, nextUrl } = getPagination(allPosts, currentPage, withBase('blog'), perPage);
 ---
 
 

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Theme from '../../layouts/Theme.astro';
+import { withBase } from '../../utils/url';
 ---
 
 <Layout title="About | moment of beings" description="moment of beings — 關於">
@@ -12,7 +13,7 @@ import Theme from '../../layouts/Theme.astro';
           moment of beings 是一個記錄與分享的空間，關於日常、思考與停留的片刻。
         </p>
         <p>
-          若你願意，歡迎透過 <a href="/blog">Blog</a> 與 <a href="/archive">Archive</a> 隨意翻閱。
+          若你願意，歡迎透過 <a href={withBase('/blog')}>Blog</a> 與 <a href={withBase('/archive')}>Archive</a> 隨意翻閱。
         </p>
       </div>
     </section>
