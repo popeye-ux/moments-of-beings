@@ -6,25 +6,23 @@ import Pagination from '../../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import { entriesToPosts, publishedFilter, getPagination } from '../../../data/posts';
 
+const PER_PAGE = 9;
+
 export async function getStaticPaths() {
-  const perPage = 9; // ← 直接在 function 內宣告，避免任何作用域怪問題
   const entries = await getCollection('blog', publishedFilter);
   const allPosts = entriesToPosts(entries);
-  const totalPages = Math.max(1, Math.ceil(allPosts.length / perPage));
-
+  const totalPages = Math.max(1, Math.ceil(allPosts.length / PER_PAGE));
   return Array.from({ length: totalPages - 1 }, (_, i) => ({
     params: { page: String(i + 2) },
   }));
 }
 
-const perPage = 9;
 const { page } = Astro.params;
 const currentPage = Number(page) || 2;
 const entries = await getCollection('blog', publishedFilter);
 const allPosts = entriesToPosts(entries);
-const { postsForPage, prevUrl, nextUrl } = getPagination(allPosts, currentPage, '/blog', perPage);
+const { postsForPage, prevUrl, nextUrl } = getPagination(allPosts, currentPage, '/blog', PER_PAGE);
 ---
-
 
 <Layout title={`Blog (${currentPage}) | moment of beings`} description="moment of beings — Blog 文章列表">
   <Theme>
