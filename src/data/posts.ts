@@ -3,7 +3,7 @@
  * 列表來自 src/content/blog/*.md
  */
 import type { CollectionEntry } from 'astro:content';
-import { withBase } from '../utils/url';
+import { withBase, assetUrl } from '../utils/url';
 
 export interface Post {
   slug: string;
@@ -38,7 +38,7 @@ export function entryToPost(entry: CollectionEntry<'blog'>): Post {
     title: data.title,
     excerpt: truncateExcerpt(data.description),
     date: formatDate(data.pubDate),
-    imageSrc: data.image ? withBase(data.image.replace(/^\//, '')) : undefined,
+    imageSrc: data.image ? assetUrl(data.image.replace(/^\//, '')) : undefined,
     imageAlt: data.imageAlt,
     tags: data.tags,
   };
