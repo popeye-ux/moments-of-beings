@@ -1,0 +1,114 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Theme from '../../layouts/Theme.astro';
+import { getCollection } from 'astro:content';
+import { entriesToPosts, getPostsGroupedByYear, publishedFilter } from '../../data/posts';
+
+const entries = await getCollection('blog', publishedFilter);
+const posts = entriesToPosts(entries);
+const grouped = getPostsGroupedByYear(posts);
+---
+
+<Layout title="Archive | moment of beings" description="moment of beings — 文章歸檔">
+  <Theme>
+    <section class="archive-section" aria-label="文章歸檔">
+      {grouped.map(({ year, posts }) => (
+        <div class="archive-year">
+          <h2 class="archive-year-heading">{year}</h2>
+          <ul class="archive-list">
+            {posts.map((post) => (
+              <li class="archive-item">
+                <a href={post.slug} class="archive-link">
+                  <time class="archive-date" datetime={post.date.replace(/\//g, '-')}>{post.date}</time>
+                  <span class="archive-title">{post.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  </Theme>
+</Layout>
+
+<style>
+  .archive-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .archive-year {
+    margin-bottom: 2rem;
+  }
+
+  .archive-year:last-child {
+    margin-bottom: 0;
+  }
+
+  .archive-year-heading {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: var(--font-leading-6);
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .archive-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .archive-item {
+    margin: 0;
+    padding: 0;
+  }
+
+  .archive-link {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.375rem 0;
+    text-decoration: none;
+    color: var(--color-text-list);
+    border-bottom: 1px solid var(--color-border);
+    transition: color 0.2s;
+  }
+
+  .archive-link:hover {
+    color: var(--color-text-secondary);
+  }
+
+  .archive-date {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    color: var(--color-text-list);
+    flex-shrink: 0;
+  }
+
+  .archive-title {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--font-leading-6);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .archive-section {
+      padding: 0 1rem;
+    }
+
+    .archive-link {
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .archive-title {
+      white-space: normal;
+    }
+  }
+</style>

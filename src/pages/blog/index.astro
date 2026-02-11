@@ -1,0 +1,36 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Theme from '../../layouts/Theme.astro';
+import ArticleGrid from '../../components/ArticleGrid.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+import { entriesToPosts, publishedFilter, getPagination } from '../../data/posts';
+
+const PER_PAGE = 9;
+const entries = await getCollection('blog', publishedFilter);
+const allPosts = entriesToPosts(entries);
+const { postsForPage, prevUrl, nextUrl } = getPagination(allPosts, 1, '/blog', PER_PAGE);
+---
+
+<Layout title="Blog | moment of beings" description="moment of beings — Blog 文章列表">
+  <Theme>
+    <section class="blog-section" aria-label="Blog 文章列表">
+      <ArticleGrid posts={postsForPage} />
+      <Pagination previousUrl={prevUrl} nextUrl={nextUrl} />
+    </section>
+  </Theme>
+</Layout>
+
+<style>
+  .blog-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .blog-section {
+      padding: 0 1rem;
+    }
+  }
+</style>

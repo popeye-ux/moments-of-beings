@@ -1,0 +1,50 @@
+---
+import ArticleCard from './ArticleCard.astro';
+
+interface Props {
+  posts: Array<{
+    slug: string;
+    title: string;
+    excerpt: string;
+    date: string;
+    imageSrc?: string;
+    imageAlt?: string;
+  }>;
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="article-grid">
+  {posts.map((post) => (
+    <ArticleCard
+      slug={post.slug}
+      title={post.title}
+      excerpt={post.excerpt}
+      date={post.date}
+      imageSrc={post.imageSrc}
+      imageAlt={post.imageAlt}
+    />
+  ))}
+</div>
+
+<style>
+  .article-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .article-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .article-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+</style>

@@ -1,0 +1,137 @@
+---
+import logo from '../assets/logo.png';
+import searchIcon from '../assets/search.png';
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/archive', label: 'Archive' },
+  { href: '/about', label: 'About' },
+];
+const currentPath = Astro.url.pathname;
+---
+
+<header class="header">
+  <div class="header-left">
+    <a href="/" class="brand">
+      <img src={logo.src} alt="moment of beings" class="brand-logo" />
+    </a>
+  </div>
+  <div class="header-right">
+    <nav class="nav">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={['nav-link', { 'nav-link--current': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <a href="/search" class="search-btn" aria-label="搜尋" title="搜尋">
+      <img src={searchIcon.src} alt="" width="24" height="24" class="search-icon" />
+    </a>
+  </div>
+</header>
+
+<style>
+  .header {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    margin-bottom: 32px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .brand {
+    display: block;
+    flex-shrink: 0;
+    text-decoration: none;
+    line-height: 0;
+  }
+
+  .brand-logo {
+    display: block;
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    color: var(--color-text);
+    text-decoration: none;
+    padding-bottom: 0.25rem;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s, font-weight 0.2s;
+  }
+
+  .nav-link:hover,
+  .nav-link--current {
+    color: #a65f00;
+    font-weight: 700;
+    border-bottom-color: #a65f00;
+  }
+
+  .search-btn {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin-top: -4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 0;
+  }
+
+  .search-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      padding: 1rem;
+    }
+
+    .header-right {
+      gap: 1rem;
+    }
+
+    .nav {
+      gap: 1rem;
+    }
+  }
+</style>

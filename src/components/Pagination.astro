@@ -1,0 +1,75 @@
+---
+interface Props {
+  previousUrl: string | null;
+  nextUrl: string | null;
+}
+
+const { previousUrl, nextUrl } = Astro.props;
+---
+
+<nav class="pagination" aria-label="分頁">
+  <div class="pagination-inner">
+    {previousUrl ? (
+      <a href={previousUrl} class="pagination-btn pagination-prev">previous</a>
+    ) : (
+      <span class="pagination-btn pagination-btn--disabled" aria-disabled="true">previous</span>
+    )}
+    {nextUrl ? (
+      <a href={nextUrl} class="pagination-btn pagination-next">next</a>
+    ) : (
+      <span class="pagination-btn pagination-btn--disabled" aria-disabled="true">next</span>
+    )}
+  </div>
+</nav>
+
+<style>
+  .pagination {
+    margin-top: 2rem;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+  }
+
+  .pagination-inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    height: 40px;
+    padding: 0 1rem;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-sm);
+    color: #6B6D71;
+    background: #D9DBE0;
+    border: 1px solid #B5B6BA;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .pagination-btn:hover {
+    color: #FB2C36;
+    border-color: #FB2C36;
+    background: transparent;
+  }
+
+  .pagination-next {
+    min-width: 59px;
+  }
+
+  .pagination-btn--disabled {
+    cursor: default;
+    background: transparent;
+    border-color: #B5B6BA;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+</style>

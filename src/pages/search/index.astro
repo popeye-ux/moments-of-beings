@@ -1,0 +1,178 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Theme from '../../layouts/Theme.astro';
+import { getCollection } from 'astro:content';
+import { entriesToPosts, publishedFilter } from '../../data/posts';
+
+const entries = await getCollection('blog', publishedFilter);
+const allPosts = entriesToPosts(entries);
+const searchablePosts = allPosts.map((p) => ({ slug: p.slug, title: p.title, excerpt: p.excerpt }));
+---
+
+<Layout title="搜尋 | moment of beings" description="moment of beings — 搜尋">
+  <Theme>
+    <section class="search-section" aria-label="搜尋">
+      <form class="search-form" action="/search" method="get" role="search">
+        <input
+          type="search"
+          name="q"
+          class="search-input"
+          placeholder="please input"
+          aria-label="搜尋關鍵字"
+          autocomplete="off"
+        />
+        <button type="submit" class="search-submit">Search</button>
+      </form>
+      <div id="search-results" class="search-results" aria-live="polite">
+        <!-- 由 client script 填入結果或「查無結果」 -->
+      </div>
+    </section>
+  </Theme>
+</Layout>
+
+<script define:vars={{ searchablePosts }}>
+  const resultsEl = document.getElementById('search-results');
+  const params = new URLSearchParams(window.location.search);
+  const q = (params.get('q') || '').trim().toLowerCase();
+
+  function renderResults() {
+    if (!q) {
+      resultsEl.innerHTML = '';
+      resultsEl.classList.remove('has-query');
+      return;
+    }
+    resultsEl.classList.add('has-query');
+    const matched = searchablePosts.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        (p.excerpt && p.excerpt.toLowerCase().includes(q)) ||
+        p.slug.toLowerCase().includes(q)
+    );
+    if (matched.length === 0) {
+      resultsEl.innerHTML = '<p class="search-no-results">查無結果</p>';
+      return;
+    }
+    resultsEl.innerHTML = `
+      <ul class="search-list">
+        ${matched.map((p) => `<li><a href="${p.slug}">${escapeHtml(p.title)}</a></li>`).join('')}
+      </ul>
+    `;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  renderResults();
+</script>
+
+<style>
+  .search-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .search-form {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .search-input {
+    flex: 1;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--font-leading-6);
+    color: var(--color-text);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg);
+  }
+
+  .search-input::placeholder {
+    color: var(--color-muted);
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--color-slate-600, #45556C);
+  }
+
+  .search-submit {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    color: var(--color-text);
+    background: #D9DBE0;
+    border: 1px solid #B5B6BA;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .search-submit:hover {
+    background: #cfd1d6;
+    border-color: #a0a2a6;
+  }
+
+  .search-results {
+    min-height: 0;
+  }
+
+  .search-results.has-query {
+    margin-top: 0.5rem;
+  }
+
+  .search-no-results {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    color: var(--color-muted);
+    margin: 0;
+    text-align: center;
+  }
+
+  .search-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .search-list li {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-list a {
+    display: block;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--font-leading-6);
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color 0.2s;
+  }
+
+  .search-list a:hover {
+    color: #a65f00;
+  }
+
+  @media (max-width: 600px) {
+    .search-section {
+      padding: 0 1rem;
+    }
+
+    .search-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

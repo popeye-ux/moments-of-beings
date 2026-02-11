@@ -1,0 +1,203 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Theme from '../../layouts/Theme.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+import { entryToPost, toISODateString, publishedFilter } from '../../data/posts';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('blog', publishedFilter);
+  return entries.map((entry) => ({ params: { slug: entry.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = slug ? await getEntryBySlug('blog', slug) : null;
+
+if (!entry || entry.data.draft === true) {
+  return Astro.redirect('/blog');
+}
+
+const post = entryToPost(entry);
+const { Content } = await entry.render();
+---
+
+<Layout title={`${post.title} | moment of beings`} description={post.excerpt}>
+  <Theme>
+    <div class="article-wrapper">
+      {post.imageSrc && (
+        <div class="article-hero">
+          <img src={post.imageSrc} alt={post.imageAlt ?? ''} class="article-hero-image" />
+        </div>
+      )}
+      {!post.imageSrc && (
+        <div class="article-hero article-hero--placeholder">
+          <span aria-hidden="true">img</span>
+        </div>
+      )}
+      <article class="article">
+      <header class="article-header">
+        <h1 class="article-title">{post.title}</h1>
+        <div class="article-meta">
+          <time datetime={toISODateString(entry.data.pubDate)}>{post.date}</time>
+          <div class="article-meta-divider" aria-hidden="true"></div>
+          {post.tags && post.tags.length > 0 ? (
+            <ul class="article-tags" aria-label="標籤">
+              {post.tags.map((tag) => (
+                <li><span class="article-tag">{tag}</span></li>
+              ))}
+            </ul>
+          ) : (
+            <span></span>
+          )}
+        </div>
+      </header>
+      <div class="article-body">
+        <Content />
+      </div>
+      </article>
+    </div>
+  </Theme>
+</Layout>
+
+<style>
+  .article-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .article-hero {
+    width: calc(100% + 4rem);
+    max-width: min(960px, 100vw);
+    margin: 0 -2rem 1.5rem;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .article {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .article-hero--placeholder {
+    background: var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    color: var(--color-muted);
+  }
+
+  .article-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .article-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .article-title {
+    font-family: var(--font-family-sans);
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+    letter-spacing: var(--font-tracking-normal);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .article-meta time {
+    flex-shrink: 0;
+  }
+
+  .article-meta-divider {
+    flex: 1;
+    min-width: 1rem;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  .article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .article-tag {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-slate-600);
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+
+  .article-body {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--font-leading-6);
+    color: var(--color-text);
+  }
+
+  .article-body :global(p) {
+    margin: 0 0 1rem;
+  }
+
+  .article-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .article-body :global(a) {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+  }
+
+  .article-body :global(a:hover) {
+    color: var(--color-text);
+  }
+
+  .article-body :global(h2) {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  .article-body :global(ul) {
+    margin: 0 0 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .article-body :global(img) {
+    max-width: 720px;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .article-wrapper {
+      padding: 0 1rem;
+    }
+    .article-hero {
+      width: calc(100% + 2rem);
+      margin-left: -1rem;
+      margin-right: -1rem;
+    }
+  }
+</style>

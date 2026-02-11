@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Theme from '../../layouts/Theme.astro';
+---
+
+<Layout title="About | moment of beings" description="moment of beings — 關於">
+  <Theme>
+    <section class="about-section" aria-label="關於">
+      <h1 class="about-title">About</h1>
+      <div class="about-body">
+        <p>
+          moment of beings 是一個記錄與分享的空間，關於日常、思考與停留的片刻。
+        </p>
+        <p>
+          若你願意，歡迎透過 <a href="/blog">Blog</a> 與 <a href="/archive">Archive</a> 隨意翻閱。
+        </p>
+      </div>
+    </section>
+  </Theme>
+</Layout>
+
+<style>
+  .about-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .about-title {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: var(--font-leading-6);
+    color: var(--color-text);
+    margin: 0 0 1rem;
+  }
+
+  .about-body {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--font-leading-6);
+    color: var(--color-text);
+  }
+
+  .about-body :global(p) {
+    margin: 0 0 1rem;
+  }
+
+  .about-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .about-body :global(a) {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+  }
+
+  .about-body :global(a:hover) {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 600px) {
+    .about-section {
+      padding: 0 1rem;
+    }
+  }
+</style>

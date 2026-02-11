@@ -1,0 +1,132 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  imageSrc?: string;
+  imageAlt?: string;
+}
+
+const { slug, title, excerpt, date, imageSrc, imageAlt = '' } = Astro.props;
+---
+
+<article class="card">
+  <a href={slug} class="card-image-link">
+    {imageSrc ? (
+      <img src={imageSrc} alt={imageAlt} class="card-image" loading="lazy" />
+    ) : (
+      <div class="card-image-placeholder" aria-hidden="true">img</div>
+    )}
+  </a>
+  <div class="card-body">
+    <h2 class="card-title">
+      <a href={slug}>{title}</a>
+    </h2>
+    <p class="card-excerpt">{excerpt}</p>
+    <div class="card-meta">
+      <time class="card-date" datetime={date}>{date}</time>
+      <span class="card-meta-line" aria-hidden="true"></span>
+      <a href={slug} class="card-more">more</a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+  }
+
+  .card-image-link {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    color: var(--color-muted);
+  }
+
+  .card-body {
+    padding: 1.25rem 8px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card-title {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    line-height: var(--font-leading-6);
+    margin: 0 0 0.5rem;
+  }
+
+  .card-title a {
+    color: var(--color-text-list);
+    text-decoration: none;
+  }
+
+  .card-title a:hover {
+    text-decoration: underline;
+  }
+
+  .card-excerpt {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--font-leading-6);
+    color: var(--color-text-list);
+    margin: 0 0 1rem;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+  }
+
+  .card-meta-line {
+    flex: 1;
+    height: 0;
+    border-top: 1px solid var(--color-border);
+    min-width: 0;
+  }
+
+  .card-date {
+    font-size: var(--font-size-sm);
+    color: var(--color-slate-600, #45556C);
+  }
+
+  .card-more {
+    font-size: var(--font-size-sm);
+    color: var(--color-slate-600, #45556C);
+    text-decoration: none;
+  }
+
+  .card-more:hover {
+    color: #a65f00;
+    text-decoration: underline;
+  }
+</style>

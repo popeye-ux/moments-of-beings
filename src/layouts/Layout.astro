@@ -1,23 +1,98 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'moment of beings', description = 'moment of beings' } = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+  /*
+   * Figma 變數 → CSS 自訂屬性
+   * 與 Figma 檔案同步，請勿隨意改數值
+   */
+  :root {
+    /* font/family/sans, family/sans */
+    --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    /* font/size/base */
+    --font-size-base: 16px;
+    /* text-sm (Tailwind) */
+    --font-size-sm: 14px;
+    /* size/lg */
+    --font-size-lg: 18px;
+
+    /* font/weight/normal, weight/normal */
+    --font-weight-normal: 400;
+
+    /* font/leading/6 */
+    --font-leading-6: 24px;
+    /* leading/4 */
+    --font-leading-4: 28px;
+
+    /* font/tracking/normal */
+    --font-tracking-normal: 0;
+
+    /* color/gray/950 */
+    --color-gray-950: #030712;
+    /* color/slate/900 */
+    --color-slate-900: #0f172b;
+    /* color/slate/400 */
+    --color-slate-400: #90a1b9;
+    /* color/slate/600 */
+    --color-slate-600: #45556C;
+    /* color/slate/800 */
+    --color-slate-800: #1d293d;
+
+    /* 語意化別名（對應 Figma 使用情境） */
+    --color-text: var(--color-gray-950);
+    --color-text-secondary: var(--color-slate-900);
+    --color-text-list: var(--color-slate-800);
+    --color-muted: var(--color-slate-400);
+    --color-bg: #E1E6EA;
+    --color-border: #cbd5e1;
+  }
+
+  html {
+    box-sizing: border-box;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--font-leading-6);
+    font-weight: var(--font-weight-normal);
+    letter-spacing: var(--font-tracking-normal);
+  }
 </style>

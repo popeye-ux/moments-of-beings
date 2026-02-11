@@ -1,11 +1,36 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Theme from '../layouts/Theme.astro';
+import Featured from '../components/Featured.astro';
+import ArticleGrid from '../components/ArticleGrid.astro';
+import heroImage from '../assets/hero.png';
+import { getCollection } from 'astro:content';
+import { entriesToPosts, publishedFilter } from '../data/posts';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const entries = await getCollection('blog', publishedFilter);
+const posts = entriesToPosts(entries);
+const featuredImageSrc = heroImage.src;
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="moment of beings">
+  <Theme>
+    <Featured imageSrc={featuredImageSrc} caption="停格在時光的縫隙" />
+    <section class="articles" aria-label="文章列表">
+      <ArticleGrid posts={posts} />
+    </section>
+  </Theme>
 </Layout>
+
+<style>
+  .articles {
+    max-width: 1200px;
+    margin: 84px auto 0;
+    padding: 0 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .articles {
+      padding: 0 1rem;
+    }
+  }
+</style>
