@@ -13,7 +13,7 @@ export function withBase(path: string): string {
 
 /** 圖片等靜態資源：使用完整 URL，避免 GitHub Pages 路徑解析問題 */
 export function assetUrl(path: string): string {
-  const site = import.meta.env.SITE?.replace(/\/$/, '') ?? '';
+  const site = import.meta.env.DEV ? '' : (import.meta.env.SITE?.replace(/\/$/, '') ?? '');
   const p = path.replace(/^\//, '');
   const b = base.endsWith('/') ? base : base + '/';
   const fullPath = p ? `${b}${p}` : b.replace(/\/$/, '') || '/';
